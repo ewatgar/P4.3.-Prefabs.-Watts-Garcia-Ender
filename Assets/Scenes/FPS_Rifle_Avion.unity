@@ -3453,9 +3453,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  velocidadArriba: 3
-  velocidadMin: -10
-  gravedad: 50
+  jumpInitialSpeed: 3.5
+  fallSpeedLimit: -20
+  gravity: 10
 --- !u!1 &1278019751
 GameObject:
   m_ObjectHideFlags: 0
@@ -4254,9 +4254,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  velocidadArriba: 3
-  velocidadMin: -10
-  gravedad: 50
+  jumpInitialSpeed: 3.5
+  fallSpeedLimit: -20
+  gravity: 10
 --- !u!114 &1390134406
 MonoBehaviour:
   m_ObjectHideFlags: 0
