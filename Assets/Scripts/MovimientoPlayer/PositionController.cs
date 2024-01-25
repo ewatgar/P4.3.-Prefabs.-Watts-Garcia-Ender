@@ -1,14 +1,15 @@
+using System;
 using UnityEngine;
 
 public class PositionController : MonoBehaviour
 {
-    [Range(1, 20)] public float speed = 8;
-    public float jumpInitialSpeed = 3.5f;
-    public float fallSpeedLimit = -20;
-    public float gravity = -10;
-    float currentSpeed = -10;
-    private bool isGrounded = false;
     private CharacterController characterController;
+    public float speed = 8;
+    float vy = -10;
+    public float jumpInitialSpeed = 3.5f;
+    public float fallSpeedLimit = 20;
+    public float gravity = -10;
+    private bool isGrounded = false;
 
     void Start()
     {
@@ -17,42 +18,40 @@ public class PositionController : MonoBehaviour
 
     void Update()
     {
-        float incPosicionX = Input.GetAxis("Horizontal")*speed*Time.deltaTime;
-        float incPosicionZ = Input.GetAxis("Vertical")*speed*Time.deltaTime;
-        float incPosicionY = 0;
+        updateMovementXZ();
+        updateJump();
+    }
 
-        /*
-        if (Input.GetKey(KeyCode.Space)){
-            incPosicionY = speed*Time.deltaTime;
-        } else if (Input.GetKey(KeyCode.LeftShift)){
-            incPosicionY = -speed*Time.deltaTime;
-        }*/
+    private void updateMovementXZ()
+    {
+        float xMovement = Input.GetAxis("Horizontal");
+        float zMovement = Input.GetAxis("Vertical");
 
-        /*
-        if (Input.GetKey(KeyCode.Space) ){
-            incPosicionY = velocidadArriba;
-        } else if (incPosicionY > velocidadMin){
-            incPosicionY += gravedad*Time.deltaTime;
-            if (incPosicionY < velocidadMin){
-                incPosicionY = velocidadMin;
-            }
-        }*/
-        float currentSpeed = -10;
+        characterController.Move(transform.TransformDirection(new Vector3(
+            xMovement,
+            0,
+            zMovement
+        ) * speed * Time.deltaTime));
+    }
 
+    private void updateJump()
+    {
         if (Input.GetKey(KeyCode.Space) && isGrounded){
-            currentSpeed = jumpInitialSpeed * Time.deltaTime;
-        }else if (incPosicionY > fallSpeedLimit){
-            currentSpeed += gravity*Time.deltaTime;
-            if (currentSpeed < fallSpeedLimit){
-                currentSpeed = fallSpeedLimit;
+            vy = jumpInitialSpeed;
+        }else if (vy > -fallSpeedLimit){
+            vy = vy + gravity*Time.deltaTime;
+            if (vy < -fallSpeedLimit){
+                vy = -fallSpeedLimit;
             }
         }
 
-        incPosicionY = currentSpeed * Time.deltaTime;
-
-        characterController.Move(transform.TransformDirection(new Vector3(incPosicionX,0,incPosicionZ)));
-        characterController.Move(new Vector3(0,incPosicionY,0));
+        characterController.Move(new Vector3(
+            0,
+            vy,
+            0
+        ) * speed/2 * Time.deltaTime);
 
         isGrounded = characterController.isGrounded;
     }
+
 }
